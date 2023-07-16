@@ -1,0 +1,51 @@
+name: "Debian Package Builder"
+author: "iHub TO <mail@ihub.to>"
+description: "GitHub Action for build Debian source package."
+branding:
+  icon: "archive"
+  color: "blue"
+inputs:
+  git_repo_src:
+    description: "Git Repository (Source)"
+    required: true
+  git_repo_dst:
+    description: "Git Repository (Destination)"
+    required: true
+  git_user:
+    description: "Git User"
+    required: true
+  git_email:
+    description: "Git E-mail"
+    required: true
+  git_token:
+    description: "Git Token"
+    required: true
+  obs_user:
+    description: "OBS User"
+    required: true
+  obs_password:
+    description: "OBS Password"
+    required: true
+  obs_token:
+    description: "OBS Token"
+    required: true
+  obs_project:
+    description: "OBS Project"
+    required: true
+  obs_package:
+    description: "OBS Package"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.git_repo_src }}
+    - ${{ inputs.git_repo_dst }}
+    - ${{ inputs.git_user }}
+    - ${{ inputs.git_email }}
+    - ${{ inputs.git_token }}
+    - ${{ inputs.obs_user }}
+    - ${{ inputs.obs_password }}
+    - ${{ inputs.obs_token }}
+    - ${{ inputs.obs_project }}
+    - ${{ inputs.obs_package }}
