@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "Build"
     steps:
-      - uses: pkgstore/github-action-build-deb@main
+      - uses: ghastore/debian-build@main
         with:
           git_repo_src: "https://github.com/${{ github.repository }}.git"
           git_repo_dst: "https://github.com/REPO_PKG_NAME.git"
@@ -77,7 +77,3 @@ jobs:
 
 - `REPO_PKG_NAME` - repository with Debian source packages.
 - `PKG_NAME` - package name.
-
-## Example
-
-- [ext-zsh](https://github.com/pkgstore/linux-deb-ext-zsh)
