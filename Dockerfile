@@ -3,7 +3,7 @@ FROM debian:stable
 LABEL "name"="Debian Package Builder"
 LABEL "description"="GitHub Action for build Debian source package."
 LABEL "maintainer"="iHub TO <mail@ihub.to>"
-LABEL "repository"="https://github.com/ghastore/build-debian.git"
+LABEL "repository"="https://github.com/ghastore/debian-build.git"
 LABEL "homepage"="https://github.com/ghastore"
 
 RUN apt update && apt install --yes ca-certificates
