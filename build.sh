@@ -1,4 +1,14 @@
 #!/bin/bash -e
+#
+# Build Debian source package.
+#
+# @package    Bash
+# @author     Kitsune Solar <mail@kitsune.solar>
+# @copyright  2023 iHub TO
+# @license    MIT
+# @version    0.0.1
+# @link       https://github.com/ghastore
+# -------------------------------------------------------------------------------------------------------------------- #
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # CONFIGURATION.
