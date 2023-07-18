@@ -1,0 +1,200 @@
+name: 'Mirror'
+
+on:
+  - push
+
+env:
+  OWNER: '${{ github.repository_owner }}'
+  USER_AGENT: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+
+jobs:
+
+  # ------------------------------------------------------------------------------------------------------------------ #
+  # GitLab.
+  # ------------------------------------------------------------------------------------------------------------------ #
+
+  mirror_gitlab:
+    runs-on: ubuntu-latest
+    name: 'GitLab'
+    env:
+      DOMAIN: 'https://gitlab.com'
+      VERSION: 'v4'
+      NSID: '69844136'
+    steps:
+      - name: 'Get repository name'
+        shell: bash
+        run: |
+          echo "REPO_NAME=$( echo '${{ github.repository }}' | awk -F '/' '{ print $2 }' )" >> $GITHUB_ENV
+      - name: 'Create repository'
+        shell: bash
+        run: |
+          http="$( curl -s -o '/dev/null' -I -w '%{http_code}' -A '${{ env.USER_AGENT }}' '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}' )"
+          if [[ "${http}" -ne 200 ]]; then
+            curl -X POST \
+            -H 'Authorization: Bearer ${{ secrets.BOT_MIRROR_TOKEN_GITLAB }}' \
+            -H 'Content-Type: application/json' \
+            -A '${{ env.USER_AGENT }}' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects' \
+            -d '{"name":"${{ env.REPO_NAME }}","path":"${{ env.REPO_NAME }}","namespace_id":"${{ env.NSID }}","visibility":"public"}'
+          fi
+      - name: 'Mirror repository'
+        uses: ghastore/github-mirror@main
+        with:
+          src_repo: '${{ github.server_url }}/${{ github.repository }}.git'
+          src_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          src_token: '${{ secrets.BOT_MIRROR_TOKEN_GITHUB }}'
+          dst_repo: '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}.git'
+          dst_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          dst_token: '${{ secrets.BOT_MIRROR_TOKEN_GITLAB }}'
+
+  # ------------------------------------------------------------------------------------------------------------------ #
+  # Codeberg.
+  # ------------------------------------------------------------------------------------------------------------------ #
+
+  mirror_codeberg:
+    runs-on: ubuntu-latest
+    name: 'Codeberg'
+    env:
+      DOMAIN: 'https://codeberg.org'
+      VERSION: 'v1'
+    steps:
+      - name: 'Get repository name'
+        shell: bash
+        run: |
+          echo "REPO_NAME=$( echo '${{ github.repository }}' | awk -F '/' '{ print $2 }' )" >> $GITHUB_ENV
+      - name: 'Create repository'
+        shell: bash
+        run: |
+          http="$( curl -s -o '/dev/null' -I -w '%{http_code}' -A '${{ env.USER_AGENT }}' '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}' )"
+          if [[ "${http}" -ne 200 ]]; then
+            curl -X POST \
+            -H 'Authorization: token ${{ secrets.BOT_MIRROR_TOKEN_CODEBERG }}' \
+            -H 'Accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -A '${{ env.USER_AGENT }}' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/orgs/${{ env.OWNER }}/repos' \
+            -d '{"name":"${{ env.REPO_NAME }}"}'
+          fi
+      - name: 'Mirror repository'
+        uses: ghastore/github-mirror@main
+        with:
+          src_repo: '${{ github.server_url }}/${{ github.repository }}.git'
+          src_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          src_token: '${{ secrets.BOT_MIRROR_TOKEN_GITHUB }}'
+          dst_repo: '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}.git'
+          dst_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          dst_token: '${{ secrets.BOT_MIRROR_TOKEN_CODEBERG }}'
+
+  # ------------------------------------------------------------------------------------------------------------------ #
+  # MosHub.
+  # ------------------------------------------------------------------------------------------------------------------ #
+
+  mirror_moshub:
+    runs-on: ubuntu-latest
+    name: 'MosHub'
+    env:
+      DOMAIN: 'https://hub.mos.ru'
+      VERSION: 'v4'
+      NSID: '38675'
+    steps:
+      - name: 'Get repository name'
+        shell: bash
+        run: |
+          echo "REPO_NAME=$( echo '${{ github.repository }}' | awk -F '/' '{ print $2 }' )" >> $GITHUB_ENV
+      - name: 'Create repository'
+        shell: bash
+        run: |
+          http="$( curl -s -o '/dev/null' -I -w '%{http_code}' -A '${{ env.USER_AGENT }}' '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}' )"
+          if [[ "${http}" -ne 200 ]]; then
+            curl -X POST \
+            -H 'Authorization: Bearer ${{ secrets.BOT_MIRROR_TOKEN_MOSHUB }}' \
+            -H 'Content-Type: application/json' \
+            -A '${{ env.USER_AGENT }}' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects' \
+            -d '{"name":"${{ env.REPO_NAME }}","path":"${{ env.REPO_NAME }}","namespace_id":"${{ env.NSID }}","visibility":"public"}'
+          fi
+      - name: 'Mirror repository'
+        uses: ghastore/github-mirror@main
+        with:
+          src_repo: '${{ github.server_url }}/${{ github.repository }}.git'
+          src_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          src_token: '${{ secrets.BOT_MIRROR_TOKEN_GITHUB }}'
+          dst_repo: '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}.git'
+          dst_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          dst_token: '${{ secrets.BOT_MIRROR_TOKEN_MOSHUB }}'
+
+  # ------------------------------------------------------------------------------------------------------------------ #
+  # GIT.ORG.RU.
+  # ------------------------------------------------------------------------------------------------------------------ #
+
+  mirror_gitorgru:
+    runs-on: ubuntu-latest
+    name: 'GIT.ORG.RU'
+    env:
+      DOMAIN: 'https://git.org.ru'
+      VERSION: 'v1'
+    steps:
+      - name: 'Get repository name'
+        shell: bash
+        run: |
+          echo "REPO_NAME=$( echo '${{ github.repository }}' | awk -F '/' '{ print $2 }' )" >> $GITHUB_ENV
+      - name: 'Create repository'
+        shell: bash
+        run: |
+          http="$( curl -s -o '/dev/null' -I -w '%{http_code}' -A '${{ env.USER_AGENT }}' '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}' )"
+          if [[ "${http}" -ne 200 ]]; then
+            curl -X POST \
+            -H 'Authorization: token ${{ secrets.BOT_MIRROR_TOKEN_GITORGRU }}' \
+            -H 'Accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -A '${{ env.USER_AGENT }}' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/orgs/${{ env.OWNER }}/repos' \
+            -d '{"name":"${{ env.REPO_NAME }}"}'
+          fi
+      - name: 'Mirror repository'
+        uses: ghastore/github-mirror@main
+        with:
+          src_repo: '${{ github.server_url }}/${{ github.repository }}.git'
+          src_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          src_token: '${{ secrets.BOT_MIRROR_TOKEN_GITHUB }}'
+          dst_repo: '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}.git'
+          dst_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          dst_token: '${{ secrets.BOT_MIRROR_TOKEN_GITORGRU }}'
+
+  # ------------------------------------------------------------------------------------------------------------------ #
+  # Disroot.
+  # ------------------------------------------------------------------------------------------------------------------ #
+
+  mirror_disroot:
+    runs-on: ubuntu-latest
+    name: 'Disroot'
+    env:
+      DOMAIN: 'https://git.disroot.org'
+      VERSION: 'v1'
+    steps:
+      - name: 'Get repository name'
+        shell: bash
+        run: |
+          echo "REPO_NAME=$( echo '${{ github.repository }}' | awk -F '/' '{ print $2 }' )" >> $GITHUB_ENV
+      - name: 'Create repository'
+        shell: bash
+        run: |
+          http="$( curl -s -o '/dev/null' -I -w '%{http_code}' -A '${{ env.USER_AGENT }}' '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}' )"
+          if [[ "${http}" -ne 200 ]]; then
+            curl -X POST \
+            -H 'Authorization: token ${{ secrets.BOT_MIRROR_TOKEN_DISROOT }}' \
+            -H 'Accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -A '${{ env.USER_AGENT }}' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/orgs/${{ env.OWNER }}/repos' \
+            -d '{"name":"${{ env.REPO_NAME }}"}'
+          fi
+      - name: 'Mirror repository'
+        uses: ghastore/github-mirror@main
+        with:
+          src_repo: '${{ github.server_url }}/${{ github.repository }}.git'
+          src_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          src_token: '${{ secrets.BOT_MIRROR_TOKEN_GITHUB }}'
+          dst_repo: '${{ env.DOMAIN }}/${{ env.OWNER }}/${{ env.REPO_NAME }}.git'
+          dst_user: '${{ secrets.BOT_MIRROR_NAME }}'
+          dst_token: '${{ secrets.BOT_MIRROR_TOKEN_DISROOT }}'
