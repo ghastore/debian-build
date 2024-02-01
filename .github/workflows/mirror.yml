@@ -34,7 +34,7 @@ jobs:
             -H 'Authorization: Bearer ${{ secrets.BOT_MIRROR_TOKEN_GITLAB }}' \
             -H 'Content-Type: application/json' \
             -A '${{ env.USER_AGENT }}' \
-            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects/' \
             -d '{"name":"${{ env.REPO_NAME }}","path":"${{ env.REPO_NAME }}","namespace_id":"${{ env.NSID }}","visibility":"public"}'
           fi
       - name: 'Mirror repository'
@@ -110,7 +110,7 @@ jobs:
             -H 'Authorization: Bearer ${{ secrets.BOT_MIRROR_TOKEN_MOSHUB }}' \
             -H 'Content-Type: application/json' \
             -A '${{ env.USER_AGENT }}' \
-            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects' \
+            '${{ env.DOMAIN }}/api/${{ env.VERSION }}/projects/' \
             -d '{"name":"${{ env.REPO_NAME }}","path":"${{ env.REPO_NAME }}","namespace_id":"${{ env.NSID }}","visibility":"public"}'
           fi
       - name: 'Mirror repository'

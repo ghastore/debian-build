@@ -2,7 +2,7 @@ FROM debian:stable
 
 LABEL "name"="Debian Package Builder"
 LABEL "description"="GitHub Action for build Debian source package."
-LABEL "maintainer"="iHub TO <mail@ihub.to>"
+LABEL "maintainer"="Kai Kimera <mail@kai.kim>"
 LABEL "repository"="https://github.com/ghastore/debian-build.git"
 LABEL "homepage"="https://github.com/ghastore"
 
